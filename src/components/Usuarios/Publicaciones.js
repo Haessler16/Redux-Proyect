@@ -1,12 +1,18 @@
 import React, { Component } from 'react';
+import Spinner from '../general/Spinner';
+import Fatal from '../general/Fatal';
+import Comentarios from './Comentarios';
+
 import { connect } from 'react-redux';
 import * as usuariosAction from '../../actions/usuariosAction';
 import * as publicacionesAction from '../../actions/publicacionesAction';
-import Spinner from '../general/Spinner';
-import Fatal from '../general/Fatal';
 
 const { traerTodos: usuariosTraerTodos } = usuariosAction;
-const { traerPorUsuarios: publicacionesTraerPorUsuarios } = publicacionesAction;
+const {
+	traerPorUsuarios: publicacionesTraerPorUsuarios,
+	abrirCerrar,
+	traerComentarios,
+} = publicacionesAction;
 
 class Publicaciones extends Component {
 	async componentDidMount() {
@@ -58,7 +64,7 @@ class Publicaciones extends Component {
 			},
 		} = this.props;
 
-		if (!usuarios.length) return <p>Ups</p>;
+		if (!usuarios.length) return <p>No users</p>;
 		if (usuariosReducer.error) return <p>userError</p>;
 
 		if (publicacionesReducer.cargando) {
@@ -73,15 +79,28 @@ class Publicaciones extends Component {
 
 		const { publicaciones_key } = usuarios[key];
 
-		return publicaciones[publicaciones_key].map((publicacion) => {
-			return (
-				<div className="pub-title" key={publicacion.id} onClick={()=>alert(publicacion.id)}>
-					<h2>{publicacion.title}</h2>
-					<h3>{publicacion.body}</h3>
-				</div>
-			);
-		});
+		return this.mostrarInfo(
+			publicaciones[publicaciones_key],
+			publicaciones_key,
+		);
 	};
+
+	mostrarInfo = (publicaciones, pub_key) => publicaciones.map((publicacion, com_key) => {
+		return (
+			<div className='pub-title' key={publicacion.id} onClick={() => this.mostrarComentarios(pub_key, com_key, publicacion.comentarios)}>
+				<h2>{publicacion.title}</h2>
+				<h3>{publicacion.body}</h3>
+				{publicacion.abierto ? <Comentarios comentarios={publicacion.comentarios}/> : null}
+			</div>
+		);
+	});
+
+	mostrarComentarios = (pub_key, com_key, comentarios)=>{
+		this.props.abrirCerrar(pub_key, com_key)
+		if(!comentarios.length){
+			this.props.traerComentarios(pub_key, com_key)
+		}
+	}
 
 	render() {
 		return (
@@ -103,6 +122,8 @@ const mapStateToProps = ({ usuariosReducer, publicacionesReducer }) => {
 const mapDispatchToProps = {
 	usuariosTraerTodos,
 	publicacionesTraerPorUsuarios,
+	abrirCerrar,
+	traerComentarios,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Publicaciones);

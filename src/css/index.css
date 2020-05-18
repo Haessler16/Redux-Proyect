@@ -40,8 +40,12 @@ body {
 	border: 1px solid black;
 	border-radius: 8px;
 	margin-bottom: 15px;
-	padding: 5px;
+	padding: 15px;
 	cursor: pointer;
+}
+
+li{
+	margin: 15px 0px 15px 0;
 }
 
 

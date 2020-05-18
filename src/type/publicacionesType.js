@@ -1,3 +1,6 @@
 export const TRAER_POR_USUARIOS = "publicaciones_traer_por_usuarios"
+export const ACTUALIZADAS = "publicaciones_actulizadas"
 export const CARGANDO = "publicaciones_cargando"
 export const ERROR = "publicaciones_error"
+export const COM_CARGANDO = "comentarios_cargando"
+export const COM_ERROR = "comentarios_error"

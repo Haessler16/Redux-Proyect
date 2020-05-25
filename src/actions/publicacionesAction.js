@@ -7,6 +7,7 @@ import {
 	COM_ERROR,
 } from '../type/publicacionesType';
 import * as usuariosType from '../type/usuariosType';
+import axios from "axios"
 
 const { TRAER_TODOS: USUARIOS_TRAER_TODOS } = usuariosType;
 
@@ -20,9 +21,9 @@ export const traerPorUsuarios = (key) => async (dispatch, getState) => {
 	const usuarios_id = usuarios[key].id;
 
 	try {
-		const data = await import(`../data/posts-${usuarios_id}`);
+		const respuesta = await axios.get(`https://jsonplaceholder.typicode.com/posts?userId=${usuarios_id}`)
 
-		const newPublication = data.default.map((publicaciones) => ({
+		const newPublication = respuesta.data.map((publicaciones) => ({
 			...publicaciones,
 			comentarios: [],
 			abierto: false,
@@ -86,6 +87,7 @@ export const traerComentarios = (pub_key, com_key) => async (
 		type: COM_CARGANDO,
 	});
 	try {
+		// const respuesta = await get.axios(https://jsonplaceholder.typicode.com/comments)
 		const res = await import(`../data/comments`);
 		const comentarios = {};
 		res.default.map((comment) => {

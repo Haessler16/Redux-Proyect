@@ -1,4 +1,4 @@
-import Todos from "../data/todos.json"
+import axios from "axios"
 import {TRAER_TODAS, CARGANDO, ERROR} from "../type/tareasType"
 
 export const traerTodas = ()=> async(dispatch)=>{
@@ -7,9 +7,9 @@ export const traerTodas = ()=> async(dispatch)=>{
     })
 
     try {
-        const respuesta = await Todos
+        const respuesta = await axios.get("https://jsonplaceholder.typicode.com/todos")
         const tareas= {}
-        respuesta.map(tar=>(
+        respuesta.data.map(tar=>(
             tareas[tar.userId]={
                 ...tareas[tar.userId],
                 [tar.id]:{
